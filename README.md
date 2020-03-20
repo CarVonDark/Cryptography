@@ -1,3 +1,3 @@
 # Cryptography
 # MA479
-this is my all coding part. 
+This is a project that contains all the coding HWs. 
