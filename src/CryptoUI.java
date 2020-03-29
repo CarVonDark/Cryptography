@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -6,11 +8,13 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -74,32 +78,95 @@ public class CryptoUI extends Application {
 		outputGrid.add(s2, 0, 0);
 		outputGrid.add(output, 1, 0);
 		grid.add(outputGrid, 1, 1);
+		
 
 		GridPane submitGrid = new GridPane();
 		submitGrid.setPadding(new Insets(0, 0, 0, 0));
-		Button submit = new Button("Submit");
+		
+		Label label1 = new Label("Key:");
+		TextField textField = new TextField ();
+		submitGrid.add(label1, 0, 0);
+		submitGrid.add(textField, 1, 0);
+		
+		Button encrypt = new Button("Encrypt");
 		submitGrid.setAlignment(Pos.CENTER);
-		submitGrid.add(submit, 0, 0);
-		submit.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+		submitGrid.add(encrypt, 0, 1);
+		encrypt.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 
 			@Override
 			public void handle(MouseEvent arg0) {
 				String inputStr = input.getText();
 				Converter c = null;
 				switch (type) {
-				case "Ceaser":
-					System.out.println("Ceaser");
-					c = new Converter(inputStr);
+				case "Affine":
+					ArrayList<Integer> aff = getAffineKey(inputStr);
+					c = new Affine(inputStr,aff.get(0),aff.get(1));
 					break;
+				case "Baby-DES":
+					c = new Baby_DES(inputStr, textField.getText());
 				default:
 					c = new Converter(inputStr);
 				}
-				output = new TextArea(c.convert());
+				output = new TextArea(c.encrypt());
 				output.setPrefColumnCount(30);
 				output.setPrefRowCount(30);
 				output.setEditable(false);
 				outputGrid.add(output, 1, 0);
 				stage.show();
+			}
+
+			private ArrayList<Integer> getAffineKey(String inputStr) {
+				ArrayList<Integer> re = new ArrayList<Integer>();
+				String[] arr = textField.getText().split(",");
+				if(arr.length != 2) {
+					re.add(0);
+					re.add(0);
+				} else {
+					re.add(Integer.parseInt(arr[0].trim()));
+					re.add(Integer.parseInt(arr[1].trim()));
+				}
+				return re;
+			}
+
+		});
+		
+		Button decrypt = new Button("Decrypt");
+		submitGrid.setAlignment(Pos.CENTER);
+		submitGrid.add(decrypt, 1, 1);
+		decrypt.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent arg0) {
+				String inputStr = input.getText();
+				Converter c = null;
+				switch (type) {
+				case "Affine":
+					System.out.println("Affine");
+					ArrayList<Integer> aff = getAffineKey(inputStr);
+					c = new Affine(inputStr,aff.get(0),aff.get(1));
+					break;
+				default:
+					c = new Converter(inputStr);
+				}
+				output = new TextArea(c.decrypt());
+				output.setPrefColumnCount(30);
+				output.setPrefRowCount(30);
+				output.setEditable(false);
+				outputGrid.add(output, 1, 0);
+				stage.show();
+			}
+
+			private ArrayList<Integer> getAffineKey(String inputStr) {
+				ArrayList<Integer> re = new ArrayList<Integer>();
+				String[] arr = textField.getText().split(",");
+				if(arr.length != 2) {
+					re.add(0);
+					re.add(0);
+				} else {
+					re.add(Integer.parseInt(arr[0].trim()));
+					re.add(Integer.parseInt(arr[1].trim()));
+				}
+				return re;
 			}
 
 		});
@@ -122,16 +189,26 @@ public class CryptoUI extends Application {
 	}
 
 	private void setType(Menu menuFile) {
-		MenuItem item1 = new MenuItem("Ceaser");
+		MenuItem item1 = new MenuItem("Affine");
 		item1.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				type = "Ceaser";
+				type = "Affine";
 			}
 
 		});
 		menuFile.getItems().add(item1);
+		MenuItem item2 = new MenuItem("Baby-DES");
+		item2.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				type = "Baby-DES";
+			}
+			
+		});
+		menuFile.getItems().add(item2);
 	}
 
 }
