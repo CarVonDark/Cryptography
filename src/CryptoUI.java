@@ -103,7 +103,9 @@ public class CryptoUI extends Application {
 					c = new Affine(inputStr,aff.get(0),aff.get(1));
 					break;
 				case "Baby-DES":
+					System.out.println("Baby-DES");
 					c = new Baby_DES(inputStr, textField.getText());
+					break;
 				default:
 					c = new Converter(inputStr);
 				}
@@ -144,6 +146,10 @@ public class CryptoUI extends Application {
 					System.out.println("Affine");
 					ArrayList<Integer> aff = getAffineKey(inputStr);
 					c = new Affine(inputStr,aff.get(0),aff.get(1));
+					break;
+				case "Baby-DES":
+					System.out.println("Baby-DES");
+					c = new Baby_DES(inputStr, textField.getText());
 					break;
 				default:
 					c = new Converter(inputStr);
