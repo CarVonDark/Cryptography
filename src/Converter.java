@@ -15,12 +15,10 @@ public class Converter {
 	}
 
 	public String decrypt() {
-		// TODO Auto-generated method stub
 		return this.input;
 	}
 
 	public String encrypt() {
-		// TODO Auto-generated method stub
 		return this.input;
 	}
 }

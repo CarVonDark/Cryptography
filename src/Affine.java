@@ -51,7 +51,7 @@ public class Affine extends Converter {
 				inverse = i;
 			}
 		}
-		for (int i = 0; i < input.length(); i++) {
+		for (int i = 0; i <= input.length()-1; i++) {
 			if (!map.containsKey(input.charAt(i))) {
 				sb.append(input.charAt(i));
 				continue;

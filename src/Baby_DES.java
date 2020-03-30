@@ -14,6 +14,7 @@ public class Baby_DES extends Converter {
 		makeBlocks(input);
 		makeS1();
 		makeS2();
+		makeS2();
 	}
 
 	public String encrypt() {

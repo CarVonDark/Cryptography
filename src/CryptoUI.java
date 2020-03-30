@@ -215,6 +215,14 @@ public class CryptoUI extends Application {
 			
 		});
 		menuFile.getItems().add(item2);
+		MenuItem item3 = new MenuItem("Baby-DES-S-key-dependent");
+		item3.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				type = "Baby-DES-S-key-dependent";
+			}
+		});
 	}
 
 }
