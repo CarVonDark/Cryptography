@@ -24,6 +24,7 @@ public class CryptoUI extends Application {
 
 	TextArea output;
 	private String type = "";
+	Converter c = null;
 
 	public static void main(String[] args) {
 		Application.launch(args);
@@ -106,6 +107,11 @@ public class CryptoUI extends Application {
 					System.out.println("Baby-DES");
 					c = new Baby_DES(inputStr, textField.getText());
 					break;
+				case "OFM-ADD":
+					System.out.println("OFM-ADD");
+					ArrayList<String> ofm = getOFMKey(textField.getText());
+					c = new OFM_ADD(inputStr, ofm.get(0), ofm.get(1));
+					break;
 				default:
 					c = new Converter(inputStr);
 				}
@@ -129,6 +135,19 @@ public class CryptoUI extends Application {
 				}
 				return re;
 			}
+			
+			private ArrayList<String> getOFMKey(String str){
+				ArrayList<String> re = new ArrayList<String>();
+				String[] arr = textField.getText().split(",");
+				if(arr.length != 2) {
+					re.add("0");
+					re.add("00000000");
+				} else {
+					re.add(arr[0].trim());
+					re.add(arr[1].trim());
+				}
+				return re;
+			}
 
 		});
 		
@@ -140,7 +159,7 @@ public class CryptoUI extends Application {
 			@Override
 			public void handle(MouseEvent arg0) {
 				String inputStr = input.getText();
-				Converter c = null;
+				
 				switch (type) {
 				case "Affine":
 					System.out.println("Affine");
@@ -150,6 +169,11 @@ public class CryptoUI extends Application {
 				case "Baby-DES":
 					System.out.println("Baby-DES");
 					c = new Baby_DES(inputStr, textField.getText());
+					break;
+				case "OFM-ADD":
+					System.out.println("OFM-ADD");
+					ArrayList<String> ofm = getOFMKey(textField.getText());
+					c = new OFM_ADD(inputStr, ofm.get(0), ofm.get(1));
 					break;
 				default:
 					c = new Converter(inputStr);
@@ -171,6 +195,19 @@ public class CryptoUI extends Application {
 				} else {
 					re.add(Integer.parseInt(arr[0].trim()));
 					re.add(Integer.parseInt(arr[1].trim()));
+				}
+				return re;
+			}
+			
+			private ArrayList<String> getOFMKey(String str){
+				ArrayList<String> re = new ArrayList<String>();
+				String[] arr = textField.getText().split(",");
+				if(arr.length != 2) {
+					re.add("0");
+					re.add("00000000");
+				} else {
+					re.add(arr[0].trim());
+					re.add(arr[1].trim());
 				}
 				return re;
 			}
@@ -221,6 +258,16 @@ public class CryptoUI extends Application {
 			@Override
 			public void handle(ActionEvent arg0) {
 				type = "Baby-DES-S-key-dependent";
+			}
+		});
+		
+		MenuItem item4 = new MenuItem("OFM-ADD");
+		menuFile.getItems().add(item4);
+		item4.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				type = "OFM-ADD";
 			}
 		});
 	}
