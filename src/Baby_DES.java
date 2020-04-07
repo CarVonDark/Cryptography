@@ -18,7 +18,6 @@ public class Baby_DES extends Converter {
 	}
 
 	public String encrypt() {
-		System.out.println("Baby-DES");
 		StringBuilder sb = new StringBuilder();
 		for (byte[] bin : blocks) {
 			ArrayList<byte[]> lr = makeLR(bin);
@@ -28,13 +27,6 @@ public class Baby_DES extends Converter {
 				byte[] temp = r;
 				r = xor(l, function(r, subkey));
 				l = temp;
-				for(byte b : l) {
-					System.out.print(b);
-				}
-				for(byte b:r) {
-					System.out.print(b);
-				}
-				System.out.println();
 			}
 			for (byte b : r) {
 				sb.append(b);
@@ -47,7 +39,6 @@ public class Baby_DES extends Converter {
 	}
 	
 	public String decrypt() {
-		System.out.println("Baby-DES");
 		StringBuilder sb = new StringBuilder();
 		for (byte[] bin : blocks) {
 			ArrayList<byte[]> lr = makeLR(bin);
@@ -57,13 +48,6 @@ public class Baby_DES extends Converter {
 				byte[] temp = r;
 				r = xor(l, function(r, keySet.get(i)));
 				l = temp;
-				for(byte b : l) {
-					System.out.print(b);
-				}
-				for(byte b:r) {
-					System.out.print(b);
-				}
-				System.out.println();
 			}
 			for (byte b : r) {
 				sb.append(b);
@@ -87,19 +71,12 @@ public class Baby_DES extends Converter {
 		for (int i = 0; i < re.size(); i++) {
 			result[i] = re.get(i);
 		}
-		System.out.println(re.toString());
 		return result;
 	}
 
 	private void makeKeySet(String inputKey) {
 		keySet = new ArrayList<byte[]>();
-		if (inputKey.length() != 9) {
-
-			for (int i = 0; i < 2; i++) {
-				keySet.add(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 });
-			}
-
-		} else {
+		
 			byte[] key = str2bin(inputKey);
 			for (int i = 0; i < 2; i++) {
 				byte[] subkey = new byte[8];
@@ -108,7 +85,7 @@ public class Baby_DES extends Converter {
 				}
 				keySet.add(subkey);
 			}
-		}
+		
 	}
 
 	private void makeBlocks(String input) {
