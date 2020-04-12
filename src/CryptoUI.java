@@ -108,9 +108,14 @@ public class CryptoUI extends Application {
 					c = new Baby_DES(inputStr, textField.getText());
 					break;
 				case "OFM-ADD":
-					System.out.println("OFM-ADD");
+					System.out.println("OFB-ADD");
 					ArrayList<String> ofm = getOFMKey(textField.getText());
 					c = new OFM_ADD(inputStr, ofm.get(0), ofm.get(1));
+					break;
+				case "CFM-ADD":
+					System.out.println("CFB-ADD");
+					ArrayList<String> cfm = getOFMKey(textField.getText());
+					c = new CFB_ADD(inputStr, cfm.get(0), cfm.get(1));
 					break;
 				default:
 					c = new Converter(inputStr);
@@ -174,6 +179,11 @@ public class CryptoUI extends Application {
 					System.out.println("OFM-ADD");
 					ArrayList<String> ofm = getOFMKey(textField.getText());
 					c = new OFM_ADD(inputStr, ofm.get(0), ofm.get(1));
+					break;
+				case "CFM-ADD":
+					System.out.println("CFB-ADD");
+					ArrayList<String> cfb = getOFMKey(textField.getText());
+					c = new CFB_ADD(inputStr, cfb.get(0), cfb.get(1));
 					break;
 				default:
 					c = new Converter(inputStr);
@@ -261,13 +271,23 @@ public class CryptoUI extends Application {
 			}
 		});
 		
-		MenuItem item4 = new MenuItem("OFM-ADD");
+		MenuItem item4 = new MenuItem("OFB-ADD");
 		menuFile.getItems().add(item4);
 		item4.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent arg0) {
 				type = "OFM-ADD";
+			}
+		});
+		
+		MenuItem item5 = new MenuItem("CFB-ADD");
+		menuFile.getItems().add(item5);
+		item5.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				type = "CFM-ADD";
 			}
 		});
 	}

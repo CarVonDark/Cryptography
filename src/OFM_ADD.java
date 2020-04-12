@@ -87,7 +87,6 @@ public class OFM_ADD extends Converter{
 			num/=2;
 		}
 		return sb.reverse().toString();
-		
 	}
 	
 	private String sanitize(String str) {
