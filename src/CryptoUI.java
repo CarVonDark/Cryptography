@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -117,6 +118,10 @@ public class CryptoUI extends Application {
 					ArrayList<String> cfm = getOFMKey(textField.getText());
 					c = new CFB_ADD(inputStr, cfm.get(0), cfm.get(1));
 					break;
+				case "AES":
+					System.out.println("AES");
+					c = new AES(inputStr, textField.getText());
+					break;
 				default:
 					c = new Converter(inputStr);
 				}
@@ -184,6 +189,10 @@ public class CryptoUI extends Application {
 					System.out.println("CFB-ADD");
 					ArrayList<String> cfb = getOFMKey(textField.getText());
 					c = new CFB_ADD(inputStr, cfb.get(0), cfb.get(1));
+					break;
+				case "AES":
+					System.out.println("AES");
+					c = new AES(inputStr, textField.getText());
 					break;
 				default:
 					c = new Converter(inputStr);
@@ -289,6 +298,17 @@ public class CryptoUI extends Application {
 			public void handle(ActionEvent arg0) {
 				type = "CFM-ADD";
 			}
+		});
+		
+		MenuItem item6 = new MenuItem("AES");
+		menuFile.getItems().add(item6);
+		item6.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				type = "AES";
+			}
+			
 		});
 	}
 
