@@ -24,23 +24,24 @@ public class Polynomial {
 
 	// performs multiplication modulo GF(2^8)
 	public static Polynomial mul(Polynomial p1, Polynomial p2) {
-		int product = 0;
+		int product=0;
 
-		int multiplier = p2.get();
-		int multiplicand = p1.get();
+		int multiplier=p2.get();
+		int multiplicand=p1.get();
 
-		while (multiplier > 0) {
-			if (multiplier % 2 == 1) {
-				product = Polynomial.modulus(product ^ multiplicand);
+		while(multiplier>0){
+			if(multiplier%2==1){
+				product=Polynomial.modulus(product^multiplicand);
 			}
 
-			multiplier = multiplier >> 1;
-			multiplicand = multiplicand << 1;
-			multiplicand = Polynomial.modulus(multiplicand);
+			multiplier=multiplier>>1;
+			multiplicand=multiplicand<<1;
+			multiplicand=Polynomial.modulus(multiplicand);
 		}
 
 		return new Polynomial(product);
 	}
+	
 
 	// returns log2 of a
 	private static int log2(int a) {
@@ -107,7 +108,7 @@ public class Polynomial {
 	}
 
 	// performs modulus operation by GF(2^8)
-	private static int modulus(int m) {
+	static int modulus(int m) {
 		if (m < 256)
 			return m;
 
