@@ -6,6 +6,7 @@ public class AES extends Converter {
 	private ArrayList<int[][]> inputList;
 	private ArrayList<int[]> keyList;
 	private Polynomial[][] mixMatrix;
+	private Polynomial[][] invMixMatrix;
 	private Polynomial[] roundConstants;
 
 	public AES(String input, String key) {
@@ -19,6 +20,8 @@ public class AES extends Converter {
 		parseInput(input);
 		this.mixMatrix = new Polynomial[4][4];
 		initializeMixMatrix();
+		this.invMixMatrix = new Polynomial[4][4];
+		initializeInvMixMatrix();
 	}
 
 	public String encrypt() {
@@ -36,6 +39,24 @@ public class AES extends Converter {
 			block = addRoundKey(block, 10);
 			sb.append(parseInts2String(block));
 		}
+		return sb.toString().toUpperCase();
+	}
+	
+	public String decrypt() {
+		StringBuilder sb = new StringBuilder();	
+		for (int[][] block : inputList) {
+			block = addRoundKey(block, 10);
+			for (int round = 9; round > 0; round--) {
+				block = invShiftRows(block);
+				block = invSubBytes(block);
+				block = addRoundKey(block, round);
+				block = invMixCols(block);
+			}
+			block = invShiftRows(block);
+			block = invSubBytes(block);
+			block = addRoundKey(block, 0);
+			sb.append(parseInts2String(block));
+		}		
 		return sb.toString().toUpperCase();
 	}
 	
@@ -60,6 +81,17 @@ public class AES extends Converter {
 		}
 		return nums;
 	}
+	
+	private int[][] invSubBytes(int[][] nums){
+		for (int i = 0; i < nums.length; i++) {
+			for (int j = 0; j < nums.length; j++) {
+				int row = (nums[i][j] & (15 << 4)) >> 4;
+				int col = nums[i][j] & 15;
+				nums[i][j] = Sbox.getInvSbox(row, col);
+			}
+		}
+		return nums;
+	}
 
 	private int[][] shiftRows(int[][] nums) {
 		for (int i = 0; i < nums[1].length - 1; i++) {
@@ -76,6 +108,25 @@ public class AES extends Converter {
 			int temp = nums[3][i - 1];
 			nums[3][i - 1] = nums[3][i];
 			nums[3][i] = temp;
+		}
+		return nums;
+	}
+	
+	private int[][] invShiftRows(int[][] nums){
+		for (int i = 0; i < nums[3].length - 1; i++) {
+			int temp = nums[3][i];
+			nums[3][i] = nums[3][i + 1];
+			nums[3][i + 1] = temp;
+		}
+		for (int i = 0; i < nums[2].length - 2; i++) {
+			int temp = nums[2][i];
+			nums[2][i] = nums[2][i + 2];
+			nums[2][i + 2] = temp;
+		}
+		for (int i = nums[1].length - 1; i > 0; i--) {
+			int temp = nums[1][i - 1];
+			nums[1][i - 1] = nums[1][i];
+			nums[1][i] = temp;
 		}
 		return nums;
 	}
@@ -101,6 +152,28 @@ public class AES extends Converter {
 		this.mixMatrix[3][2] = new Polynomial(1);
 		this.mixMatrix[3][3] = new Polynomial(2);
 	}
+	
+	private void initializeInvMixMatrix() {
+		this.invMixMatrix[0][0] = new Polynomial(14);
+		this.invMixMatrix[0][1] = new Polynomial(11);
+		this.invMixMatrix[0][2] = new Polynomial(13);
+		this.invMixMatrix[0][3] = new Polynomial(9);
+
+		this.invMixMatrix[1][0] = new Polynomial(9);
+		this.invMixMatrix[1][1] = new Polynomial(14);
+		this.invMixMatrix[1][2] = new Polynomial(11);
+		this.invMixMatrix[1][3] = new Polynomial(13);
+
+		this.invMixMatrix[2][0] = new Polynomial(13);
+		this.invMixMatrix[2][1] = new Polynomial(9);
+		this.invMixMatrix[2][2] = new Polynomial(14);
+		this.invMixMatrix[2][3] = new Polynomial(11);
+
+		this.invMixMatrix[3][0] = new Polynomial(11);
+		this.invMixMatrix[3][1] = new Polynomial(13);
+		this.invMixMatrix[3][2] = new Polynomial(9);
+		this.invMixMatrix[3][3] = new Polynomial(14);
+	}
 
 	private int[][] mixCols(int[][] nums) {
 		for (int col = 0; col < 4; col++) {
@@ -120,6 +193,28 @@ public class AES extends Converter {
 			nums[3][col] = Polynomial.add(
 					Polynomial.add(Polynomial.mul(row0, mixMatrix[3][0]), Polynomial.mul(row1, mixMatrix[3][1])),
 					Polynomial.add(Polynomial.mul(row2, mixMatrix[3][2]), Polynomial.mul(row3, mixMatrix[3][3]))).get();
+		}
+		return nums;
+	}
+	
+	private int[][] invMixCols(int[][] nums){
+		for (int col = 0; col < 4; col++) {
+			Polynomial row0 = new Polynomial(nums[0][col]);
+			Polynomial row1 = new Polynomial(nums[1][col]);
+			Polynomial row2 = new Polynomial(nums[2][col]);
+			Polynomial row3 = new Polynomial(nums[3][col]);
+			nums[0][col] = Polynomial.add(
+					Polynomial.add(Polynomial.mul(row0, invMixMatrix[0][0]), Polynomial.mul(row1, invMixMatrix[0][1])),
+					Polynomial.add(Polynomial.mul(row2, invMixMatrix[0][2]), Polynomial.mul(row3, invMixMatrix[0][3]))).get();
+			nums[1][col] = Polynomial.add(
+					Polynomial.add(Polynomial.mul(row0, invMixMatrix[1][0]), Polynomial.mul(row1, invMixMatrix[1][1])),
+					Polynomial.add(Polynomial.mul(row2, invMixMatrix[1][2]), Polynomial.mul(row3, invMixMatrix[1][3]))).get();
+			nums[2][col] = Polynomial.add(
+					Polynomial.add(Polynomial.mul(row0, invMixMatrix[2][0]), Polynomial.mul(row1, invMixMatrix[2][1])),
+					Polynomial.add(Polynomial.mul(row2, invMixMatrix[2][2]), Polynomial.mul(row3, invMixMatrix[2][3]))).get();
+			nums[3][col] = Polynomial.add(
+					Polynomial.add(Polynomial.mul(row0, invMixMatrix[3][0]), Polynomial.mul(row1, invMixMatrix[3][1])),
+					Polynomial.add(Polynomial.mul(row2, invMixMatrix[3][2]), Polynomial.mul(row3, invMixMatrix[3][3]))).get();
 		}
 		return nums;
 	}
