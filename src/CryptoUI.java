@@ -122,6 +122,11 @@ public class CryptoUI extends Application {
 					System.out.println("AES");
 					c = new AES(inputStr, textField.getText());
 					break;
+				case "PohlihHellman":
+					System.out.println("PohlihHellman");
+					ArrayList<String> ph = getOFMKey(textField.getText());
+					c = new PohligHellman(inputStr, ph.get(0), ph.get(1));
+					break;
 				default:
 					c = new Converter(inputStr);
 				}
@@ -193,6 +198,11 @@ public class CryptoUI extends Application {
 				case "AES":
 					System.out.println("AES");
 					c = new AES(inputStr, textField.getText());
+					break;
+				case "PohlihHellman":
+					System.out.println("PohlihHellman");
+					ArrayList<String> ph = getOFMKey(textField.getText());
+					c = new PohligHellman(inputStr, ph.get(0), ph.get(1));
 					break;
 				default:
 					c = new Converter(inputStr);
@@ -307,6 +317,17 @@ public class CryptoUI extends Application {
 			@Override
 			public void handle(ActionEvent arg0) {
 				type = "AES";
+			}
+			
+		});
+		
+		MenuItem item7 = new MenuItem("PohlihHellman");
+		menuFile.getItems().add(item7);
+		item7.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				type = "PohlihHellman";
 			}
 			
 		});
