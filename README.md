@@ -1,6 +1,6 @@
 # Cryptography
 # MA479
-<<<<<<< HEAD
+
 #MA479 
 Double click on the jar file. 
 Select the type from upper right corner
@@ -47,4 +47,4 @@ enter the key as (encryption key, blocksize). No parentheses. Please choose bloc
 encrypt or decrypt
 
 This is a project that contains all the coding HWs. 
->>>>>>> branch 'master' of https://github.com/CarVonDark/Cryptography.git
+
